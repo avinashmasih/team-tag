@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class SprayCan : MonoBehaviour
@@ -32,7 +33,13 @@ public class SprayCan : MonoBehaviour
     /// <summary>
     /// How much paint is currently in the can.
     /// </summary>
-    public float CurrentFill => currentFill;
+    public float CurrentFill {
+        get => currentFill;
+        private set {
+            currentFill = value;
+            OnFillChanged?.Invoke(currentFill);
+        }
+    }
 
     [SerializeField]
     [HideInInspector]
@@ -42,41 +49,56 @@ public class SprayCan : MonoBehaviour
     /// </summary>
     public bool Spraying { get => spraying; }
 
+    public delegate void ColorChanged(Color oldColor, Color newColor);
+    public event ColorChanged OnColorChanged;
+
+    public delegate void CurrentFillChanged(float newFill);
+    public event CurrentFillChanged OnFillChanged;
+
     private void Start()
     {
         currentFill = MaxCapacity;
+        ChangeColor(color);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Spray") && !Mathf.Approximately(0, currentFill))
+        if (!Spraying && !Mathf.Approximately(Input.GetAxis("Refill"), 0))
+        {
+            Refill();
+        }
+        else if (Input.GetButton("Spray") && !Mathf.Approximately(0, currentFill))
         {
             spraying = true;
             currentFill -= SprayRate * Time.deltaTime;
-            currentFill = Mathf.Max(0, currentFill);
-            return;
+            CurrentFill = Mathf.Max(0, currentFill);
         }
         else if (Spraying)
         {
             spraying = false;
         }
 
-        if (!Mathf.Approximately(Input.GetAxis("Refill"), 0)) Refill();
+        if (Input.GetButtonDown("Fire2"))
+        {
+            ChangeColor(Color.green);
+        }
     }
 
     public void ChangeColor(Color _color)
     {
+        var oldColor = color;
         color = _color;
+        OnColorChanged?.Invoke(oldColor, _color);
     }
 
     public void Refill()
     {
-        currentFill = Mathf.Min(MaxCapacity, currentFill + RefillRate);
+        CurrentFill = Mathf.Min(MaxCapacity, currentFill + RefillRate);
     }
 
     public void RefillMax()
     {
-        currentFill = MaxCapacity;
+        CurrentFill = MaxCapacity;
     }
 }
