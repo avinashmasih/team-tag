@@ -37,6 +37,7 @@ public class SprayCan : MonoBehaviour
         get => currentFill;
         private set {
             currentFill = value;
+            currentFill = Mathf.Clamp(currentFill, 0, MaxCapacity);
             OnFillChanged?.Invoke(currentFill);
         }
     }
@@ -68,11 +69,10 @@ public class SprayCan : MonoBehaviour
         {
             Refill();
         }
-        else if (Input.GetButton("Spray") && !Mathf.Approximately(0, currentFill))
+        else if (Input.GetButton("Spray") && !Mathf.Approximately(0, CurrentFill))
         {
             spraying = true;
-            currentFill -= SprayRate * Time.deltaTime;
-            CurrentFill = Mathf.Max(0, currentFill);
+            CurrentFill -= SprayRate * Time.deltaTime;
         }
         else if (Spraying)
         {
@@ -94,7 +94,12 @@ public class SprayCan : MonoBehaviour
 
     public void Refill()
     {
-        CurrentFill = Mathf.Min(MaxCapacity, currentFill + RefillRate);
+        CurrentFill += RefillRate;
+    }
+
+    public void Refill(float value)
+    {
+        CurrentFill += value;
     }
 
     public void RefillMax()
