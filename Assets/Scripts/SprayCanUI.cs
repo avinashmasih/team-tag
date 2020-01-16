@@ -10,11 +10,15 @@ public class SprayCanUI : MonoBehaviour
     /// </summary>
     [Tooltip("The spray can that controls this UI element.")]
     public SprayCan sprayCan;
-    /// <summary>
+    
+    /*/// <summary>
     /// The image that represents the color and fill level of the spray can.
     /// </summary>
     [Tooltip("The image that represents the color and fill level of the spray can.")]
-    public Image fillImage;
+    public Image fillImage;*/
+
+    public PaintLevel paintLevel;
+
     /// <summary>
     /// The maximum height of the image.
     /// </summary>
@@ -25,16 +29,17 @@ public class SprayCanUI : MonoBehaviour
     {
         sprayCan.OnColorChanged += ChangeColor;
         sprayCan.OnFillChanged += ChangeFill;
-        maxHeight = fillImage.GetComponent<RectTransform>().sizeDelta.y;
+        //maxHeight = fillImage.GetComponent<RectTransform>().sizeDelta.y;
     }
 
     private void ChangeFill(float newFill)
     {
-        var rectTransform = fillImage.GetComponent<RectTransform>();
-        var originalSize = rectTransform.sizeDelta;
-        
+        //var rectTransform = fillImage.GetComponent<RectTransform>();
+        //var originalSize = rectTransform.sizeDelta;
+
         // We want it to be a percentage of its original height.
-        rectTransform.sizeDelta = new Vector2(originalSize.x, newFill / sprayCan.MaxCapacity * maxHeight);
+        //rectTransform.sizeDelta = new Vector2(originalSize.x, newFill / sprayCan.MaxCapacity * maxHeight);
+        paintLevel.SetMaskHeight(newFill / sprayCan.MaxCapacity);
     }
 
     private void OnDestroy()
@@ -45,6 +50,6 @@ public class SprayCanUI : MonoBehaviour
 
     void ChangeColor(Color oldColor, Color newColor)
     {
-        fillImage.color = newColor;
+        //fillImage.color = newColor;
     }
 }
