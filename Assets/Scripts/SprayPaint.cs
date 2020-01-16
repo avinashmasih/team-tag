@@ -8,12 +8,12 @@ using UnityEngine;
 public class SprayPaint : MonoBehaviour
 {
     public Vector3         SprayLocation { get => sprayLocation; }
+    public int             paintRadius = 10;
 
     private Camera          mainCamera;
     private SprayCan        sprayCan;
     private Vector3         sprayLocation;
     private Transform       sprayReticleTransform;
-
 
 
     // Start is called before the first frame update
@@ -81,10 +81,14 @@ public class SprayPaint : MonoBehaviour
             pixelUV.x *= tex.width;
             pixelUV.y *= tex.height;
 
-            tex.SetPixel((int)pixelUV.x, (int)pixelUV.y, Color.black);
-            tex.SetPixel((int)pixelUV.x+1, (int)pixelUV.y+1, Color.black);
-            tex.SetPixel((int)pixelUV.x-1, (int)pixelUV.y-1, Color.black);
-            tex.Apply();
+            for(int i = 0; i < paintRadius; i++)
+            {
+                tex.SetPixel((int)pixelUV.x + i, (int)pixelUV.y + i, Color.red);
+                tex.SetPixel((int)pixelUV.x + i, (int)pixelUV.y - i, Color.red);
+                tex.SetPixel((int)pixelUV.x - i, (int)pixelUV.y + i, Color.red);
+                tex.SetPixel((int)pixelUV.x - i, (int)pixelUV.y - i, Color.red);
+                tex.Apply();
+            } 
         }
         else
         {

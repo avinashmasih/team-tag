@@ -1,18 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Image), typeof(Button))]
 public class ColorTag : MonoBehaviour
 {
     public Color tagColor;
 
-    private Button button;
+    public Image buttonImage;
 
     public void Start()
     {
-        button = GetComponent<Button>();
-        button.onClick.AddListener(ChangeColor);
-        GetComponent<Image>().color = tagColor;
+        buttonImage.color = tagColor;
     }
 
     public void ChangeColor()
