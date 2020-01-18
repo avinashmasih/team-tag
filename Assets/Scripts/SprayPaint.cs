@@ -14,7 +14,12 @@ public class SprayPaint : MonoBehaviour
     private SprayCan        sprayCan;
     private Vector3         sprayLocation;
     private Transform       sprayReticleTransform;
+    private Color[]         colorArray;
+    private Mesh            mesh;
+    private bool            newColArray = false;
+    private GameObject      meshObject;
 
+    private List<int> indices;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +29,8 @@ public class SprayPaint : MonoBehaviour
         Cursor.visible        = false;
         sprayCan              = GetComponent<SprayCan>();
         sprayReticleTransform = GetComponentInChildren<Transform>();
+
+        indices = new List<int>();
     }
 
     // Update is called once per frame
@@ -75,20 +82,74 @@ public class SprayPaint : MonoBehaviour
             if (rend == null || rend.sharedMaterial == null || meshCollider == null)
                 return;
 
-            Texture2D tex = rend.material.mainTexture as Texture2D;
+            
+            Mesh mesh = meshCollider.gameObject.GetComponent<MeshFilter>().sharedMesh;
+            int[] triangles = mesh.triangles;
+
+            if (!newColArray)
+            {
+                newColArray = true;
+                colorArray = new Color[mesh.vertices.Length];
+            }
+
+            int vert1 = triangles[sprayHit.triangleIndex * 3 + 0];
+            int vert2 = triangles[sprayHit.triangleIndex * 3 + 1];
+            int vert3 = triangles[sprayHit.triangleIndex * 3 + 2];
+
+            Debug.Log($"{mesh.colors[vert1]}, {mesh.colors[vert2]}, {mesh.colors[vert3]}");
+
+            /*for (int i = 0; i < indices.Count; i++)
+            {
+                Debug.Log(mesh.colors[indices[i]]);
+            }
+
+            Debug.Log(meshObject.GetComponent<Renderer>().material);*/
+
+            colorArray[vert1] = Color.green;
+            colorArray[vert2] = Color.green;
+            colorArray[vert3] = Color.green;
+
+            mesh.colors = colorArray;
+
+            //Debug.Log($"{colorArray[vert1]}, {colorArray[vert2]}, {colorArray[vert3]}");
+
+            /*int p0 = triangles[sprayHit.triangleIndex * 3 + 0];
+            int p1 = triangles[sprayHit.triangleIndex * 3 + 1];
+            int p2 = triangles[sprayHit.triangleIndex * 3 + 2];
+
+
+            colorArray[0] = Color.red;
+            colorArray[1] = Color.red;
+            colorArray[2] = Color.red;
+
+            mesh.colors = colorArray;
+
+
+            /*Mesh mesh = meshCollider.sharedMesh;
+            Vector3[] vertices = mesh.vertices;
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Debug.Log(vertices[i]);
+            }
+
+            /*Texture2D tex = rend.material.mainTexture as Texture2D;
             Vector2 pixelUV = sprayHit.textureCoord;
 
             pixelUV.x *= tex.width;
             pixelUV.y *= tex.height;
 
-            for(int i = 0; i < paintRadius; i++)
+            tex.SetPixel((int)pixelUV.x , (int)pixelUV.y , Color.red);
+            tex.Apply();
+
+            /*for(int i = 0; i < paintRadius; i++)
             {
                 tex.SetPixel((int)pixelUV.x + i, (int)pixelUV.y + i, Color.red);
                 tex.SetPixel((int)pixelUV.x + i, (int)pixelUV.y - i, Color.red);
                 tex.SetPixel((int)pixelUV.x - i, (int)pixelUV.y + i, Color.red);
                 tex.SetPixel((int)pixelUV.x - i, (int)pixelUV.y - i, Color.red);
                 tex.Apply();
-            } 
+            }*/
         }
         else
         {
