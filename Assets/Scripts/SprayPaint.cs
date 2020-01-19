@@ -7,17 +7,14 @@ using UnityEngine;
 
 public class SprayPaint : MonoBehaviour
 {
-    public Vector3         SprayLocation { get => sprayLocation; }
-    public int             paintRadius = 10;
+    public Vector3         SprayLocation { get => _sprayLocation; }
 
-    private Camera          mainCamera;
-    private SprayCan        sprayCan;
-    private Vector3         sprayLocation;
-    private Transform       sprayReticleTransform;
-    private Color[]         colorArray;
-    private Mesh            mesh;
-    private bool            newColArray = false;
-    private GameObject      meshObject;
+    private Camera          _mainCamera;
+    private SprayCan        _sprayCan;
+    private Vector3         _sprayLocation;
+    private Transform       _sprayReticleTransform;
+    private Color[]         _colorArray;
+    private bool            _newColArray = false;
 
     private List<int> indices;
 
@@ -25,10 +22,10 @@ public class SprayPaint : MonoBehaviour
     void Start()
     {
         transform.position    = Vector3.zero;
-        mainCamera            = Camera.main;
+        _mainCamera            = Camera.main;
         Cursor.visible        = false;
-        sprayCan              = GetComponent<SprayCan>();
-        sprayReticleTransform = GetComponentInChildren<Transform>();
+        _sprayCan              = GetComponent<SprayCan>();
+        _sprayReticleTransform = GetComponentInChildren<Transform>();
 
         indices = new List<int>();
     }
@@ -43,9 +40,9 @@ public class SprayPaint : MonoBehaviour
         PositionReticle(sprayScreenPos);
 
         // Get the final location of the spray if the button is pressed
-        if (sprayCan.Spraying)
+        if (_sprayCan.Spraying)
         {
-            CastSpray(sprayScreenPos, out sprayLocation);
+            CastSpray(sprayScreenPos, out _sprayLocation);
         }
     }
 
@@ -54,17 +51,17 @@ public class SprayPaint : MonoBehaviour
     private void PositionReticle(Vector3 i_sprayScreenPosition)
     {
 
-        Vector3 sprayScreenPositionCamera   = new Vector3(i_sprayScreenPosition.x, i_sprayScreenPosition.y, mainCamera.nearClipPlane);
-        Vector3 reticlePos                  = mainCamera.ScreenToWorldPoint(sprayScreenPositionCamera);
+        Vector3 sprayScreenPositionCamera   = new Vector3(i_sprayScreenPosition.x, i_sprayScreenPosition.y, _mainCamera.nearClipPlane);
+        Vector3 reticlePos                  = _mainCamera.ScreenToWorldPoint(sprayScreenPositionCamera);
 
-        sprayReticleTransform.position      = reticlePos;
+        _sprayReticleTransform.position      = reticlePos;
     }
 
 
     // Get the final world space location of the spray
     private void CastSpray(Vector3 i_sprayScreenPos, out Vector3 o_canvasPoint)
     {
-        Ray         sprayLine = mainCamera.ScreenPointToRay(i_sprayScreenPos);
+        Ray         sprayLine = _mainCamera.ScreenPointToRay(i_sprayScreenPos);
         RaycastHit  sprayHit;
 
         if (Physics.Raycast(sprayLine.origin, sprayLine.direction.normalized, out sprayHit, Mathf.Infinity))
@@ -76,80 +73,35 @@ public class SprayPaint : MonoBehaviour
 
             o_canvasPoint = sprayHit.point;
 
+            // Find if something is hit
             Renderer rend = sprayHit.transform.GetComponent<Renderer>();
             MeshCollider meshCollider = sprayHit.collider as MeshCollider;
 
             if (rend == null || rend.sharedMaterial == null || meshCollider == null)
                 return;
 
-            
+            //Find the game object being hit by spray
             Mesh mesh = meshCollider.gameObject.GetComponent<MeshFilter>().sharedMesh;
             int[] triangles = mesh.triangles;
 
-            if (!newColArray)
+            //Clear the paint at the play
+            if (!_newColArray)
             {
-                newColArray = true;
-                colorArray = new Color[mesh.vertices.Length];
+                _newColArray = true;
+                _colorArray = new Color[mesh.vertices.Length];
             }
 
+            //Find the face hit by cast
             int vert1 = triangles[sprayHit.triangleIndex * 3 + 0];
             int vert2 = triangles[sprayHit.triangleIndex * 3 + 1];
             int vert3 = triangles[sprayHit.triangleIndex * 3 + 2];
 
-            Debug.Log($"{mesh.colors[vert1]}, {mesh.colors[vert2]}, {mesh.colors[vert3]}");
+            //color the face
+            _colorArray[vert1] = _sprayCan.color;
+            _colorArray[vert2] = _sprayCan.color;
+            _colorArray[vert3] = _sprayCan.color;
 
-            /*for (int i = 0; i < indices.Count; i++)
-            {
-                Debug.Log(mesh.colors[indices[i]]);
-            }
-
-            Debug.Log(meshObject.GetComponent<Renderer>().material);*/
-
-            colorArray[vert1] = Color.green;
-            colorArray[vert2] = Color.green;
-            colorArray[vert3] = Color.green;
-
-            mesh.colors = colorArray;
-
-            //Debug.Log($"{colorArray[vert1]}, {colorArray[vert2]}, {colorArray[vert3]}");
-
-            /*int p0 = triangles[sprayHit.triangleIndex * 3 + 0];
-            int p1 = triangles[sprayHit.triangleIndex * 3 + 1];
-            int p2 = triangles[sprayHit.triangleIndex * 3 + 2];
-
-
-            colorArray[0] = Color.red;
-            colorArray[1] = Color.red;
-            colorArray[2] = Color.red;
-
-            mesh.colors = colorArray;
-
-
-            /*Mesh mesh = meshCollider.sharedMesh;
-            Vector3[] vertices = mesh.vertices;
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                Debug.Log(vertices[i]);
-            }
-
-            /*Texture2D tex = rend.material.mainTexture as Texture2D;
-            Vector2 pixelUV = sprayHit.textureCoord;
-
-            pixelUV.x *= tex.width;
-            pixelUV.y *= tex.height;
-
-            tex.SetPixel((int)pixelUV.x , (int)pixelUV.y , Color.red);
-            tex.Apply();
-
-            /*for(int i = 0; i < paintRadius; i++)
-            {
-                tex.SetPixel((int)pixelUV.x + i, (int)pixelUV.y + i, Color.red);
-                tex.SetPixel((int)pixelUV.x + i, (int)pixelUV.y - i, Color.red);
-                tex.SetPixel((int)pixelUV.x - i, (int)pixelUV.y + i, Color.red);
-                tex.SetPixel((int)pixelUV.x - i, (int)pixelUV.y - i, Color.red);
-                tex.Apply();
-            }*/
+            mesh.colors = _colorArray;
         }
         else
         {
