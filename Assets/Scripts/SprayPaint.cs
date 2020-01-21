@@ -1,13 +1,17 @@
-﻿#define SPRAY_DEBUG
-
+﻿#if DEBUG
+#define SPRAY_DEBUG
+#endif
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SprayCan))]
 public class SprayPaint : MonoBehaviour
 {
     public Vector3         SprayLocation { get => _sprayLocation; }
+
+    public RectTransform ReticleTransform;
 
     private Camera          _mainCamera;
     private SprayCan        _sprayCan;
