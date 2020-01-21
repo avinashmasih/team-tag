@@ -1,18 +1,19 @@
-﻿#define SPRAY_DEBUG
+﻿#if DEBUG
+#define SPRAY_DEBUG
+#endif
 
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
+[RequireComponent(typeof(SprayCan))]
 public class Spray : MonoBehaviour
 {
     public Vector3         SprayLocation { get => sprayLocation; }
+    public RectTransform ReticleTransform;
 
     private Camera          mainCamera;
     private SprayCan        sprayCan;
     private Vector3         sprayLocation;
-    private Transform       sprayReticleTransform;
 
 
 
@@ -23,7 +24,6 @@ public class Spray : MonoBehaviour
         mainCamera            = Camera.main;
         Cursor.visible        = false;
         sprayCan              = GetComponent<SprayCan>();
-        sprayReticleTransform = GetComponentInChildren<Transform>();
     }
 
     // Update is called once per frame
@@ -47,10 +47,7 @@ public class Spray : MonoBehaviour
     private void PositionReticle(Vector3 i_sprayScreenPosition)
     {
 
-        Vector3 sprayScreenPositionCamera   = new Vector3(i_sprayScreenPosition.x, i_sprayScreenPosition.y, mainCamera.nearClipPlane);
-        Vector3 reticlePos                  = mainCamera.ScreenToWorldPoint(sprayScreenPositionCamera);
-
-        sprayReticleTransform.position      = reticlePos;
+        ReticleTransform.anchoredPosition = i_sprayScreenPosition;
     }
 
 
