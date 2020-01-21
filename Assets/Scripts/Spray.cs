@@ -5,6 +5,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Obsolete("Use SprayPaint component instead.")]
 [RequireComponent(typeof(SprayCan))]
 public class Spray : MonoBehaviour
 {
