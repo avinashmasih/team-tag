@@ -15,6 +15,7 @@ public class SprayPaint : MonoBehaviour
     private Transform       _sprayReticleTransform;
     private Color[]         _colorArray;
     private bool            _newColArray = false;
+    private Mesh            _mesh;
 
     private List<int> indices;
 
@@ -81,14 +82,14 @@ public class SprayPaint : MonoBehaviour
                 return;
 
             //Find the game object being hit by spray
-            Mesh mesh = meshCollider.gameObject.GetComponent<MeshFilter>().sharedMesh;
-            int[] triangles = mesh.triangles;
+            _mesh = meshCollider.gameObject.GetComponent<MeshFilter>().sharedMesh;
+            int[] triangles = _mesh.triangles;
 
             //Clear the paint at the play
             if (!_newColArray)
             {
                 _newColArray = true;
-                _colorArray = new Color[mesh.vertices.Length];
+                _colorArray = new Color[_mesh.vertices.Length];
             }
 
             //Find the face hit by cast
@@ -101,11 +102,17 @@ public class SprayPaint : MonoBehaviour
             _colorArray[vert2] = _sprayCan.color;
             _colorArray[vert3] = _sprayCan.color;
 
-            mesh.colors = _colorArray;
+            _mesh.colors = _colorArray;
         }
         else
         {
             o_canvasPoint = Vector3.zero;
         }
+    }
+    private void OnApplicationQuit()
+    {
+        if(_newColArray)
+            _colorArray = new Color[_mesh.vertices.Length];
+        _mesh.colors = _colorArray;
     }
 }
