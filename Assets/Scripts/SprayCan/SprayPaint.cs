@@ -75,20 +75,25 @@ public class SprayPaint : MonoBehaviour
 #if SPRAY_DEBUG
             Debug.DrawRay(sprayLine.origin, sprayLine.direction.normalized * sprayHit.distance, Color.red);
 #endif
-
+            
             o_canvasPoint = sprayHit.point;
 
             // Find if something is hit
             Renderer rend = sprayHit.transform.GetComponent<Renderer>();
             MeshCollider meshCollider = sprayHit.collider as MeshCollider;
 
+            //Debug.Log(meshCollider.gameObject.name);
+
             if (rend == null || rend.sharedMaterial == null || meshCollider == null)
                 return;
+
+            //Debug.Log(rend.sharedMaterial);
 
             //Find the game object being hit by spray
             _mesh = meshCollider.gameObject.GetComponent<MeshFilter>().sharedMesh;
             int[] triangles = _mesh.triangles;
 
+            //Debug.Log(_mesh.name);
             //Clear the paint at the play
             if (!_newColArray)
             {
