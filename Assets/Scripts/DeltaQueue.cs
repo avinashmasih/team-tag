@@ -39,6 +39,12 @@ public class DeltaQueue : MonoBehaviour
     public delegate void SecondElapsed(float timeRemaining);
     public event SecondElapsed OnSecondElapsed;
 
+    public delegate void WaitTimeBegan();
+    public event WaitTimeBegan OnWaitTimeBegan;
+
+    public delegate void WaitTimeEnded();
+    public event WaitTimeEnded OnWaitTimeEnded;
+
     private float untilNext = 0;
 
     // Start is called before the first frame update
@@ -53,10 +59,17 @@ public class DeltaQueue : MonoBehaviour
         untilNext = timePerItem;
     }
 
+    void Wait()
+    {
+        OnWaitTimeBegan?.Invoke();
+        Invoke("MoveOn", delayBetweenItems);
+    }
+
     void MoveOn()
     {
+        OnWaitTimeEnded?.Invoke();
         var current = queue.Dequeue();
-        Invoke(queue.Count != 0 ? "MoveOn" : "Finish", current.time);
+        Invoke(queue.Count != 0 ? "Wait" : "Finish", current.time);
         OnClockAdvanced?.Invoke(current.item);
         untilNext = current.time;
     }
@@ -64,6 +77,7 @@ public class DeltaQueue : MonoBehaviour
     void Finish()
     {
         Debug.Log("All done!");
+        CancelInvoke("Tick");
         OnClockCompleted?.Invoke();
     }
 
