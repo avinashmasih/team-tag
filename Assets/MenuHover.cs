@@ -4,10 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MenuHover : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IPointerExitHandler
 {
+    public bool isQuit = false;
     public Animator anim;
+    public StartMenu startMenu;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -23,7 +26,22 @@ public class MenuHover : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IP
 
     public void OnSelect(BaseEventData eventData)
     {
+        if (isQuit)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            startMenu.StartExitTransition = true;
+        }
+    }
 
+    private void Update()
+    {
+        if (startMenu.StartExitTransition)
+        {
+            anim.SetBool("doTransition", true);
+        }
     }
 
 
