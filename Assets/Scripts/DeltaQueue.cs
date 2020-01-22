@@ -22,6 +22,7 @@ public class DeltaQueue : MonoBehaviour
 
     Queue<DeltaQueueItem> queue = new Queue<DeltaQueueItem>();
 
+    [Tooltip("The items that the player(s) should draw")]
     public List<string> items;
 
     public float timePerItem = 5.0f;
@@ -35,6 +36,11 @@ public class DeltaQueue : MonoBehaviour
     public class ClockComplete : UnityEvent { }
     public ClockComplete OnClockCompleted;
 
+    public delegate void SecondElapsed(float timeRemaining);
+    public event SecondElapsed OnSecondElapsed;
+
+    private float untilNext = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,19 +49,26 @@ public class DeltaQueue : MonoBehaviour
             queue.Enqueue(new DeltaQueueItem(timePerItem, item));
         }
         Invoke("MoveOn", 0);
+        InvokeRepeating("Tick", 0, 1);
+        untilNext = timePerItem;
     }
 
     void MoveOn()
     {
         var current = queue.Dequeue();
-        Debug.Log($"Draw a {current.item}");
         Invoke(queue.Count != 0 ? "MoveOn" : "Finish", current.time);
         OnClockAdvanced?.Invoke(current.item);
+        untilNext = current.time;
     }
 
     void Finish()
     {
         Debug.Log("All done!");
         OnClockCompleted?.Invoke();
+    }
+
+    void Tick()
+    {
+        OnSecondElapsed?.Invoke(untilNext--);
     }
 }
