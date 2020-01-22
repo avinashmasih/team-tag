@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ObjectiveDisplay : MonoBehaviour
+public class DeltaQueueDisplay : MonoBehaviour
 {
     public Text objectiveText;
 
     public string finishedText = "Done!";
+
+    public Text countdown;
 
     public DeltaQueue queue;
 
@@ -15,6 +15,17 @@ public class ObjectiveDisplay : MonoBehaviour
     {
         queue.OnClockAdvanced.AddListener(SetText);
         queue.OnClockCompleted.AddListener(SetTextFinished);
+        queue.OnSecondElapsed += Tick;
+    }
+
+    private void Tick(float timeRemaining)
+    {
+        if (!countdown) return;
+        int minutesLeft = (int)timeRemaining / 60;
+        int secondsLeft = (int)timeRemaining % 60;
+        countdown.text = minutesLeft <= 0 ?
+            secondsLeft.ToString() :
+            $"{minutesLeft}:{secondsLeft}";
     }
 
     public void SetText(string text)
