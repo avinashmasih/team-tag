@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 40920898064399273}
   - component: {fileID: 1642596607941616206}
   - component: {fileID: 8507140762364431336}
+  - component: {fileID: 1107051265688319042}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -116,18 +117,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1642596607941616206}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5052086496058991061}
-        m_MethodName: ChangeColor
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!114 &1107051265688319042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317551284140705338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db9ad995b824ceb48aa984714f4bc9b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorTag: {fileID: 5052086496058991061}
 --- !u!1 &623840655077375417
 GameObject:
   m_ObjectHideFlags: 0

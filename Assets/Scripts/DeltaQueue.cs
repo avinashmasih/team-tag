@@ -17,6 +17,7 @@ public class DeltaQueue : MonoBehaviour
     public class ClockComplete : UnityEvent { }
     public ClockComplete OnClockCompleted;
 
+    public int queueCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +31,8 @@ public class DeltaQueue : MonoBehaviour
 
     public void MoveOn()
     {
+        queueCount = queue.Count;
+
         if (queue.Count == 0)
         {
             Finish();

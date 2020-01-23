@@ -23,5 +23,10 @@ public class DeltaQueueDisplay : MonoBehaviour
     private void SetTextFinished()
     {
         SetText(finishedText);
+
+        if (queue.queueCount == 0)
+        {
+            // Trigger camera pan
+        }
     }
 }

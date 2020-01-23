@@ -8,7 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main/StartMenu.unity
     guid: f87be88c118366d4296be1da9181e2e0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main/Freestyle.unity
     guid: 9ee0d3888f5050141b96bcd2e91b1a7a
+  - enabled: 0
+    path: Assets/Scenes/Casey/Casey-Test.unity
+    guid: 4dd8361d241350e4699615ca414c8213
+  - enabled: 0
+    path: Assets/Scenes/Casey/MainDuplicate.unity
+    guid: 0a58ceafaaa06194888656ff66cf5876
   m_configObjects: {}
