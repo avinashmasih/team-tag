@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2332572833152070622}
   - component: {fileID: 2332572833152070617}
   - component: {fileID: 1843088839539667760}
-  - component: {fileID: 7442923317838524396}
+  - component: {fileID: 6545718228557690997}
   m_Layer: 0
   m_Name: SprayCan
   m_TagString: Untagged
@@ -101,7 +101,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7442923317838524396
+--- !u!114 &6545718228557690997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2332572833152070616}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcf83864407c19c47b3edf7c8711d986, type: 3}
+  m_Script: {fileID: 11500000, guid: 594a009d7ddb6f542825a6294148f1e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ReticleTransform: {fileID: 0}
