@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class TextureToSprite : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class TextureToSprite : MonoBehaviour
     public void ClearWall()
     {
         _targetSprite = RTImage(renderCamera);
-        textureList.Add(_targetSprite);
+        Texture2D finalSprite = gameObject.GetComponent<ConvertToAlpha>().Converter(_targetSprite);
+        textureList.Add(finalSprite);
         sprayPaint.ClearWall();
     }
 
