@@ -33,6 +33,7 @@ public class SprayPaint : MonoBehaviour
         _sprayReticleTransform = GetComponentInChildren<Transform>();
 
         indices = new List<int>();
+        //ClearWall();
     }
 
     // Update is called once per frame
@@ -120,7 +121,12 @@ public class SprayPaint : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        if(_newColArray)
+        ClearWall();
+    }
+
+    public void ClearWall()
+    {
+        if (_newColArray)
             _colorArray = new Color[_mesh.vertices.Length];
         _mesh.colors = _colorArray;
     }
