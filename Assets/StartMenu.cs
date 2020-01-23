@@ -10,6 +10,8 @@ public class StartMenu : MonoBehaviour
     public bool ReadyToExit = false;
     public bool StartLevel1Transition = false;
     public bool StartLevel1 = false;
+    public bool StartExitSequence = false;
+    public bool EndGame = false;
     private float timer = 0f;
 
     // Start is called before the first frame update

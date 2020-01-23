@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class Level1Camera : MonoBehaviour
 {
+    public MoveForwardBehaviour moveForward;
     public StartMenu startMenu;
     private Animator anim;
+    public bool moveForwardActive = false;
+    public PlayerMove playerMove;
+    public bool endGame = false;
 
+    public bool movePlayer = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,5 +31,19 @@ public class Level1Camera : MonoBehaviour
         {
             startMenu.StartLevel1 = true;
         }
+
+        if (startMenu.StartExitSequence)
+        {
+            anim.SetTrigger("startFollow");
+        }
+
+        if (DoorDetection.hasAICrossed)
+        {
+            anim.SetBool("backToPlayer", true);
+        }
+
+        moveForward.isActivated = moveForwardActive;
+        playerMove.isActivated = movePlayer;
+        startMenu.EndGame = endGame;
     }
 }

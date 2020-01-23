@@ -14,14 +14,15 @@ public class DoorDetection : MonoBehaviour
             hasPlayerCrossed = true;
             Destroy(other.gameObject);
         }
-        if (other.CompareTag("EnemyAI"))
-        {
-            if (other.gameObject.GetComponent<AIMovement>().hasDetected)
-            {
-                hasAICrossed = true;
-            }
-        }
 
+    }
+
+    private void Update()
+    {
+        if(!GameObject.FindGameObjectWithTag("EnemyAI"))
+        {
+            hasAICrossed = true;
+        }
     }
 
 }

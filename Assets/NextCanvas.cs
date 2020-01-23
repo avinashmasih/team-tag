@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class NextCanvas : MonoBehaviour
 {
+    public GameObject gameplayUI;
+    public StartMenu startMenu;
+    public DeltaQueueDisplay deltaQueueDisplay;
     public DeltaQueue deltaQueue;
     public Animator anim;
 
@@ -57,6 +60,19 @@ public class NextCanvas : MonoBehaviour
 
     private void SelectUI()
     {
-        deltaQueue.MoveOn();
+
+        if (deltaQueue.queueCount == 0 && deltaQueueDisplay.isDone)
+        {
+            startMenu.StartExitSequence = true;
+            gameplayUI.SetActive(false);
+        }
+        else
+        {
+            deltaQueue.MoveOn();
+        }
+
+
+
+
     }
 }

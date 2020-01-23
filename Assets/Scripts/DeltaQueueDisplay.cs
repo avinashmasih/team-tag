@@ -6,6 +6,8 @@ public class DeltaQueueDisplay : MonoBehaviour
     public Text objectiveText;
     public string finishedText = "Done!";
 
+    public bool isDone = false;
+
     public DeltaQueue queue;
 
     public void Awake()
@@ -24,9 +26,12 @@ public class DeltaQueueDisplay : MonoBehaviour
     {
         SetText(finishedText);
 
+
         if (queue.queueCount == 0)
         {
             // Trigger camera pan
+            isDone = true;
+
         }
     }
 }

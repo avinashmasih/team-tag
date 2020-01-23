@@ -128,7 +128,11 @@ public class WiimoteInput : MonoBehaviour
 
     private void Update()
     {
-        prevButtonDown = currButtonDown;
-        currButtonDown = _remote.Button.b;
+        if (isConnected)
+        {
+            prevButtonDown = currButtonDown;
+            currButtonDown = _remote.Button.b;
+        }
+        
     }
 }
