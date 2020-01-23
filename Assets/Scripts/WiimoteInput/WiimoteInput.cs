@@ -117,4 +117,5 @@ public class WiimoteInput : MonoBehaviour
 
         return isShaking;
     }
+
 }
