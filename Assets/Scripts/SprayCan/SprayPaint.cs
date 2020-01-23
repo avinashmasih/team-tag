@@ -28,21 +28,17 @@ public class SprayPaint : MonoBehaviour
     {
         transform.position    = Vector3.zero;
         _mainCamera            = Camera.main;
-        Cursor.visible        = false;
         _sprayCan              = GetComponent<SprayCan>();
         _sprayReticleTransform = GetComponentInChildren<Transform>();
 
         indices = new List<int>();
+        //ClearWall();
     }
 
     // Update is called once per frame
     void Update()
     {
-
         Vector3 sprayScreenPos = Input.mousePosition;
-
-        // Aiming
-        PositionReticle(sprayScreenPos);
 
         // Get the final location of the spray if the button is pressed
         if (_sprayCan.Spraying)
@@ -50,18 +46,6 @@ public class SprayPaint : MonoBehaviour
             CastSpray(sprayScreenPos, out _sprayLocation);
         }
     }
-
-
-    // Position reticle in the world space in front of the camera
-    private void PositionReticle(Vector3 i_sprayScreenPosition)
-    {
-
-        Vector3 sprayScreenPositionCamera   = new Vector3(i_sprayScreenPosition.x, i_sprayScreenPosition.y, _mainCamera.nearClipPlane);
-        Vector3 reticlePos                  = _mainCamera.ScreenToWorldPoint(sprayScreenPositionCamera);
-
-        _sprayReticleTransform.position      = reticlePos;
-    }
-
 
     // Get the final world space location of the spray
     private void CastSpray(Vector3 i_sprayScreenPos, out Vector3 o_canvasPoint)
@@ -107,11 +91,17 @@ public class SprayPaint : MonoBehaviour
             int vert3 = triangles[sprayHit.triangleIndex * 3 + 2];
 
             //color the face
-            _colorArray[vert1] = _sprayCan.color;
-            _colorArray[vert2] = _sprayCan.color;
-            _colorArray[vert3] = _sprayCan.color;
+            if (vert1 < _colorArray.Length &&
+                vert2 < _colorArray.Length &&
+                vert3 < _colorArray.Length)
+            {
+                _colorArray[vert1] = _sprayCan.color;
+                _colorArray[vert2] = _sprayCan.color;
+                _colorArray[vert3] = _sprayCan.color;
 
-            _mesh.colors = _colorArray;
+                if (_mesh.colors.Length == _colorArray.Length)
+                    _mesh.colors = _colorArray;
+            }
         }
         else
         {
@@ -120,8 +110,14 @@ public class SprayPaint : MonoBehaviour
     }
     private void OnApplicationQuit()
     {
-        if(_newColArray)
+        ClearWall();
+    }
+
+    public void ClearWall()
+    {
+        if (_newColArray)
             _colorArray = new Color[_mesh.vertices.Length];
-        _mesh.colors = _colorArray;
+        if (_mesh)
+            _mesh.colors = _colorArray;
     }
 }

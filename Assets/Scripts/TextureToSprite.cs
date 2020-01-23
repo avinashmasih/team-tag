@@ -1,31 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TextureToSprite : MonoBehaviour
 {
     public Camera renderCamera;
-    public GameObject matObject;
+    public SprayPaint sprayPaint;
+    public List<Texture2D> textureList;
 
-    private Texture2D targetSprite;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Texture2D _targetSprite;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            targetSprite = RTImage(renderCamera);
-            var temp = matObject.GetComponent<MeshRenderer>().material.GetTexture("_BaseMap");
-            Debug.Log(temp);
-            matObject.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", targetSprite);
-        }
-            
+            ClearWall();
+        }   
+    }
+
+    public void ClearWall()
+    {
+        _targetSprite = RTImage(renderCamera);
+        textureList.Add(_targetSprite);
+        sprayPaint.ClearWall();
     }
 
     // Take a "screenshot" of a camera's Render Texture.
@@ -48,4 +45,5 @@ public class TextureToSprite : MonoBehaviour
         RenderTexture.active = currentRT;
         return image;
     }
+
 }

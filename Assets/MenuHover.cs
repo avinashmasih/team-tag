@@ -6,25 +6,49 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class MenuHover : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IPointerExitHandler
+public class MenuHover : MonoBehaviour
 {
     public bool isQuit = false;
     public Animator anim;
     public StartMenu startMenu;
 
-    public void OnPointerEnter(PointerEventData eventData)
+    private void Update()
     {
-        anim.SetBool("isHighlighted", true);
-        anim.SetBool("isMirrored", false);
-    }
-    
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        anim.SetBool("isHighlighted", false);
-        anim.SetBool("isMirrored", true);
+        Vector3 pointerPosition = Input.mousePosition;
+        Vector2 sprayScreenPos  = new Vector2(pointerPosition.x, pointerPosition.y);
+        bool sprayed            = Input.GetButtonDown("Spray");
+        
+
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        bool isHovering             = RectTransformUtility.RectangleContainsScreenPoint(rectTransform, sprayScreenPos);
+
+        Highlight(isHovering);
+
+        if (isHovering && sprayed)
+        {
+
+            SelectUI();
+
+        }
+
+
+        if (startMenu.StartExitTransition)
+        {
+
+            anim.SetBool("doTransition", true);
+
+        }
     }
 
-    public void OnSelect(BaseEventData eventData)
+
+
+    private void Highlight(bool i_highlight)
+    {
+        anim.SetBool("isHighlighted", i_highlight);
+        anim.SetBool("isMirrored", !i_highlight);
+    }
+
+    private void SelectUI()
     {
         if (isQuit)
         {
@@ -35,14 +59,5 @@ public class MenuHover : MonoBehaviour, IPointerEnterHandler, ISelectHandler, IP
             startMenu.StartExitTransition = true;
         }
     }
-
-    private void Update()
-    {
-        if (startMenu.StartExitTransition)
-        {
-            anim.SetBool("doTransition", true);
-        }
-    }
-
 
 }

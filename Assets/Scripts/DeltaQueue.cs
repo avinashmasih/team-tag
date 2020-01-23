@@ -1,32 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
 public class DeltaQueue : MonoBehaviour
-{
-    [System.Serializable]
-    public struct DeltaQueueItem
-    {
-        [SerializeField]
-        public float time;
-        [SerializeField]
-        public string item;
-
-        public DeltaQueueItem(float time, string item) {
-            this.time = time;
-            this.item = item;
-        }
-    }
-
-    Queue<DeltaQueueItem> queue = new Queue<DeltaQueueItem>();
+{    
+    Queue<string> queue = new Queue<string>();
 
     [Tooltip("The items that the player(s) should draw")]
     public List<string> items;
-
-    public float timePerItem = 5.0f;
-    public float delayBetweenItems = 1.5f;
 
     [System.Serializable]
     public class ClockAdvanced : UnityEvent<string> { }
@@ -36,39 +17,30 @@ public class DeltaQueue : MonoBehaviour
     public class ClockComplete : UnityEvent { }
     public ClockComplete OnClockCompleted;
 
-    public delegate void SecondElapsed(float timeRemaining);
-    public event SecondElapsed OnSecondElapsed;
-
-    private float untilNext = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         foreach (var item in items)
         {
-            queue.Enqueue(new DeltaQueueItem(timePerItem, item));
+            queue.Enqueue(item);
         }
-        Invoke("MoveOn", 0);
-        InvokeRepeating("Tick", 0, 1);
-        untilNext = timePerItem;
+        MoveOn();
     }
 
-    void MoveOn()
+    public void MoveOn()
     {
+        if (queue.Count == 0)
+        {
+            Finish();
+            return;
+        }
         var current = queue.Dequeue();
-        Invoke(queue.Count != 0 ? "MoveOn" : "Finish", current.time);
-        OnClockAdvanced?.Invoke(current.item);
-        untilNext = current.time;
+        OnClockAdvanced?.Invoke(current);
     }
 
-    void Finish()
+    public void Finish()
     {
-        Debug.Log("All done!");
         OnClockCompleted?.Invoke();
-    }
-
-    void Tick()
-    {
-        OnSecondElapsed?.Invoke(untilNext--);
     }
 }
