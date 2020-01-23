@@ -1,32 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
 
 public class TextureToSprite : MonoBehaviour
 {
     public Camera renderCamera;
-    public GameObject wall;
+    public SprayPaint sprayPaint;
     public List<Texture2D> textureList;
 
     private Texture2D _targetSprite;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            _targetSprite = RTImage(renderCamera);
-            textureList.Add(_targetSprite);
-            wall.GetComponent<SprayPaint>().ClearWall();
-        }
-            
+            ClearWall();
+        }   
+    }
+
+    public void ClearWall()
+    {
+        _targetSprite = RTImage(renderCamera);
+        textureList.Add(_targetSprite);
+        sprayPaint.ClearWall();
     }
 
     // Take a "screenshot" of a camera's Render Texture.
