@@ -91,11 +91,17 @@ public class SprayPaint : MonoBehaviour
             int vert3 = triangles[sprayHit.triangleIndex * 3 + 2];
 
             //color the face
-            _colorArray[vert1] = _sprayCan.color;
-            _colorArray[vert2] = _sprayCan.color;
-            _colorArray[vert3] = _sprayCan.color;
+            if (vert1 < _colorArray.Length &&
+                vert2 < _colorArray.Length &&
+                vert3 < _colorArray.Length)
+            {
+                _colorArray[vert1] = _sprayCan.color;
+                _colorArray[vert2] = _sprayCan.color;
+                _colorArray[vert3] = _sprayCan.color;
 
-            _mesh.colors = _colorArray;
+                if (_mesh.colors.Length == _colorArray.Length)
+                    _mesh.colors = _colorArray;
+            }
         }
         else
         {
@@ -111,6 +117,7 @@ public class SprayPaint : MonoBehaviour
     {
         if (_newColArray)
             _colorArray = new Color[_mesh.vertices.Length];
-        _mesh.colors = _colorArray;
+        if (_mesh)
+            _mesh.colors = _colorArray;
     }
 }
