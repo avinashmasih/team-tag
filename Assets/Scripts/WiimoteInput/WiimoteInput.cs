@@ -23,6 +23,8 @@ public class WiimoteInput : MonoBehaviour
 
     private static Wiimote _remote;
 
+    public static bool isConnected;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,8 @@ public class WiimoteInput : MonoBehaviour
         {
             _remote = WiimoteManager.Wiimotes[0];
             _remote.SendPlayerLED(false, false, false, false);
+
+            isConnected = true;
 
             //Setup IR Camera
             if (_remote.SetupIRCamera(IRDataType.BASIC))
@@ -45,6 +49,8 @@ public class WiimoteInput : MonoBehaviour
         }
         else
         {
+            isConnected = false;
+
             Debug.Log("Wiimote not connected!");
         }
     }
