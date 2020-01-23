@@ -21,16 +21,20 @@ public class Assembler : MonoBehaviour
     /// </summary>
     public void Assemble()
     {
-        for (int i = 0; i < spriteRenderers.Length; ++i)
+        
+        for (int i = 1; i <= spriteRenderers.Length; ++i)
         {
             var tex = textures.textureList[i];
-            var sr = spriteRenderers[i];
+            var sr = spriteRenderers[i-1];
 
             sr.sprite = Sprite.Create(
                 tex, 
                 new Rect(0, 0, tex.width, tex.height), 
-                new Vector2(.5f, .5f)
+                new Vector2(0.5f, 0.5f)
             );
         }
+
+        Vector3 adjustment = new Vector3(-545.36f, -318.98f, 259.59f);
+        transform.localPosition = adjustment;
     }
 }
