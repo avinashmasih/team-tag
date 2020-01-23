@@ -28,7 +28,6 @@ public class SprayPaint : MonoBehaviour
     {
         transform.position    = Vector3.zero;
         _mainCamera            = Camera.main;
-        Cursor.visible        = false;
         _sprayCan              = GetComponent<SprayCan>();
         _sprayReticleTransform = GetComponentInChildren<Transform>();
 
@@ -38,11 +37,7 @@ public class SprayPaint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         Vector3 sprayScreenPos = Input.mousePosition;
-
-        // Aiming
-        PositionReticle(sprayScreenPos);
 
         // Get the final location of the spray if the button is pressed
         if (_sprayCan.Spraying)
@@ -50,18 +45,6 @@ public class SprayPaint : MonoBehaviour
             CastSpray(sprayScreenPos, out _sprayLocation);
         }
     }
-
-
-    // Position reticle in the world space in front of the camera
-    private void PositionReticle(Vector3 i_sprayScreenPosition)
-    {
-
-        Vector3 sprayScreenPositionCamera   = new Vector3(i_sprayScreenPosition.x, i_sprayScreenPosition.y, _mainCamera.nearClipPlane);
-        Vector3 reticlePos                  = _mainCamera.ScreenToWorldPoint(sprayScreenPositionCamera);
-
-        _sprayReticleTransform.position      = reticlePos;
-    }
-
 
     // Get the final world space location of the spray
     private void CastSpray(Vector3 i_sprayScreenPos, out Vector3 o_canvasPoint)
