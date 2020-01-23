@@ -14,7 +14,7 @@ public class ReticleFollow : MonoBehaviour
     void Start()
     {
         _mainCamera = Camera.main;
-        RectTransform reticle = GetComponent<RectTransform>();
+        reticle = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
