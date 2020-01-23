@@ -10,13 +10,11 @@ using UnityEngine;
 public class SprayPaint : MonoBehaviour
 {
     public Vector3         SprayLocation { get => _sprayLocation; }
-
-    public RectTransform ReticleTransform;
+    private float           SprayDistance = 15;
 
     private Camera          _mainCamera;
     private SprayCan        _sprayCan;
     private Vector3         _sprayLocation;
-    private Transform       _sprayReticleTransform;
     private Color[]         _colorArray;
     private bool            _newColArray = false;
     private Mesh            _mesh;
@@ -29,7 +27,6 @@ public class SprayPaint : MonoBehaviour
         transform.position    = Vector3.zero;
         _mainCamera            = Camera.main;
         _sprayCan              = GetComponent<SprayCan>();
-        _sprayReticleTransform = GetComponentInChildren<Transform>();
 
         indices = new List<int>();
         //ClearWall();
@@ -38,7 +35,18 @@ public class SprayPaint : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 sprayScreenPos = Input.mousePosition;
+        Vector3 sprayScreenPos;
+
+        if (WiimoteInput.isConnected)
+        {
+            Vector2 wiiMotePointerPos = WiimoteInput.GetPointerPosition();
+            sprayScreenPos = new Vector3(wiiMotePointerPos.x, wiiMotePointerPos.y, 0f);
+        }
+        else
+        {
+            sprayScreenPos = Input.mousePosition;
+        }
+        
 
         // Get the final location of the spray if the button is pressed
         if (_sprayCan.Spraying)
@@ -53,7 +61,7 @@ public class SprayPaint : MonoBehaviour
         Ray         sprayLine = _mainCamera.ScreenPointToRay(i_sprayScreenPos);
         RaycastHit  sprayHit;
 
-        if (Physics.Raycast(sprayLine.origin, sprayLine.direction.normalized, out sprayHit, Mathf.Infinity))
+        if (Physics.Raycast(sprayLine.origin, sprayLine.direction.normalized, out sprayHit, SprayDistance))
         {
 
 #if SPRAY_DEBUG
