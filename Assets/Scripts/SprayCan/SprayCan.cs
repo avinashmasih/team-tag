@@ -5,7 +5,8 @@ using UnityEngine.Events;
 
 [System.Serializable]
 public class SprayCan : MonoBehaviour
-{
+{ 
+
     /// <summary>
     /// The current color of the spray can.
     /// </summary>
@@ -60,28 +61,53 @@ public class SprayCan : MonoBehaviour
     {
         currentFill = MaxCapacity;
         ChangeColor(color);
+        //WiimoteInput.accelerometerIntensityMultiplier = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!Spraying && !Mathf.Approximately(Input.GetAxis("Refill"), 0))
+        if (WiimoteInput.isConnected)
         {
-            Refill();
-        }
-        else if (Input.GetButton("Spray") && !Mathf.Approximately(0, CurrentFill))
-        {
-            spraying = true;
-            CurrentFill -= SprayRate * Time.deltaTime;
-        }
-        else if (Spraying)
-        {
-            spraying = false;
-        }
+            if (!Spraying && WiimoteInput.isShaking())
+            {
+                Refill();
+            }
+            else if (WiimoteInput.isSprayButtonPressed && !Mathf.Approximately(0, CurrentFill))
+            {
+                spraying = true;
+                CurrentFill -= SprayRate * Time.deltaTime;
+            }
+            else if (Spraying)
+            {
+                spraying = false;
+            }
 
-        if (Input.GetButtonDown("Fire2"))
+            if (Input.GetButtonDown("Fire2"))
+            {
+                ChangeColor(Color.green);
+            }
+        }
+        else
         {
-            ChangeColor(Color.green);
+            if (!Spraying && !Mathf.Approximately(Input.GetAxis("Refill"), 0))
+            {
+                Refill();
+            }
+            else if (Input.GetButton("Spray") && !Mathf.Approximately(0, CurrentFill))
+            {
+                spraying = true;
+                CurrentFill -= SprayRate * Time.deltaTime;
+            }
+            else if (Spraying)
+            {
+                spraying = false;
+            }
+
+            if (Input.GetButtonDown("Fire2"))
+            {
+                ChangeColor(Color.green);
+            }
         }
     }
 
