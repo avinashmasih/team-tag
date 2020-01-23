@@ -4,18 +4,35 @@ using UnityEngine.UI;
 public class DeltaQueueDisplay : MonoBehaviour
 {
     public Text objectiveText;
-
     public string finishedText = "Done!";
 
     public Text countdown;
+    public Image delayImage;
 
     public DeltaQueue queue;
 
     public void Start()
     {
+        // Show the new items
         queue.OnClockAdvanced.AddListener(SetText);
         queue.OnClockCompleted.AddListener(SetTextFinished);
+        
+        // Timer
         queue.OnSecondElapsed += Tick;
+
+        // Show image when things are changing
+        queue.OnWaitTimeBegan += ShowImage;
+        queue.OnWaitTimeEnded += HideImage;
+    }
+
+    private void ShowImage()
+    {
+        if (delayImage) delayImage.enabled = true;
+    }
+
+    private void HideImage()
+    {
+        if (delayImage) delayImage.enabled = false;
     }
 
     private void Tick(float timeRemaining)
@@ -35,6 +52,6 @@ public class DeltaQueueDisplay : MonoBehaviour
 
     private void SetTextFinished()
     {
-        objectiveText.text = finishedText;
+        SetText(finishedText);
     }
 }
