@@ -8,6 +8,8 @@ public class StartMenu : MonoBehaviour
     public int NextSceneIndex = 1;
     public bool StartExitTransition = false;
     public bool ReadyToExit = false;
+    public bool StartLevel1Transition = false;
+    public bool StartLevel1 = false;
     private float timer = 0f;
 
     // Start is called before the first frame update
@@ -24,14 +26,14 @@ public class StartMenu : MonoBehaviour
             timer += Time.deltaTime;
         }
 
-        if (timer >= 2.5f)
+        if (timer >= 1.5f)
         {
             ReadyToExit = true;
         }
 
         if (ReadyToExit)
         {
-            SceneManager.LoadScene(NextSceneIndex);
+            StartLevel1Transition = true;
         }
     }
 }
