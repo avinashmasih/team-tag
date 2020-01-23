@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class MoveTrail : MonoBehaviour
 {
-    public Spray spray;
+    public SprayPaint spray;
     void Update() { transform.position = spray.SprayLocation; }
 }
