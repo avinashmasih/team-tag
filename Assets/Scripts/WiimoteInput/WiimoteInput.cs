@@ -11,7 +11,7 @@ public class WiimoteInput : MonoBehaviour
     public static int screenHeight = 1080;
 
     [Header("Shaking Parameters")]
-    public static float tolerance = 0.65f;
+    public static float tolerance = 0.7f;
     public static float accelerometerIntensityMultiplier = 100f;
     /// <summary>
     /// Returns true if analog is pressed, false otherwise.
@@ -19,6 +19,14 @@ public class WiimoteInput : MonoBehaviour
     public static bool isSprayButtonPressed
     {
         get { return _remote.Button.b; }
+    }
+
+    private static bool prevButtonDown;
+    private static bool currButtonDown;
+
+    public static bool isSprayButtonDownThisFrame()
+    {
+        return (!prevButtonDown && currButtonDown);
     }
 
     private static Wiimote _remote;
@@ -69,7 +77,7 @@ public class WiimoteInput : MonoBehaviour
             position = _remote.Ir.GetPointingPosition();
 
             //Wiimote considers origin as bottom left so invert y coordinates
-            position[1] = 1 - position[1];
+            position[1] = position[1];
 
             //Scale it with respect to the screen resolution
             position[0] *= screenWidth;
@@ -106,11 +114,11 @@ public class WiimoteInput : MonoBehaviour
             if ((sum / 3.0f) > (tolerance * accelerometerIntensityMultiplier) || (sum / 3.0f) < (tolerance * -accelerometerIntensityMultiplier))
             {
                 isShaking = true;
-                _remote.RumbleOn = true; // Enabled Rumble
-                _remote.SendStatusInfoRequest(); // Requests Status Report, encodes Rumble into input report
-                Thread.Sleep(500); // Wait 0.5s
-                _remote.RumbleOn = false; // Disabled Rumble
-                _remote.SendStatusInfoRequest(); // Requests Status Report, encodes Rumble into input report
+                //_remote.RumbleOn = true; // Enabled Rumble
+                //_remote.SendStatusInfoRequest(); // Requests Status Report, encodes Rumble into input report
+                //Thread.Sleep(500); // Wait 0.5s
+                //_remote.RumbleOn = false; // Disabled Rumble
+                //_remote.SendStatusInfoRequest(); // Requests Status Report, encodes Rumble into input report
             }
             ret = _remote.ReadWiimoteData();
         } while (ret > 0);
@@ -118,4 +126,9 @@ public class WiimoteInput : MonoBehaviour
         return isShaking;
     }
 
+    private void Update()
+    {
+        prevButtonDown = currButtonDown;
+        currButtonDown = _remote.Button.b;
+    }
 }
